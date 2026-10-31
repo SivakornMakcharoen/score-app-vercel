@@ -1,7 +1,7 @@
 'use strict';
 // API ทั้งหมดของระบบกรอกคะแนน รันเป็น Vercel Function เดียว (ดักทุก /api/*)
 const crypto = require('node:crypto');
-const { query } = require('../lib/db');
+const { query, findUrl } = require('../lib/db');
 
 const MAX = 200;                 // เพดานจำนวนต่อกิจกรรม
 const API_LIMIT = 60;            // คำขอต่อนาทีต่อ IP (ผู้ใช้หลายคนในที่เดียวกันมักใช้ IP เดียวกัน จึงไม่ตั้งต่ำเกินไป)
@@ -64,6 +64,12 @@ module.exports = async function handler(req, res) {
   try {
     const url = (req.url || '/').split('?')[0].replace(/\/+$/, ''), m = req.method;
     if (!url.startsWith('/api/')) return send(res, 404, { error: 'not_found' });
+
+    if (m === 'GET' && url === '/api/health') { // ตรวจการตั้งค่า (ไม่เปิดเผยค่าลับ) ลบได้หลังใช้งานได้แล้ว
+      const out = { admin_password_ok: (process.env.ADMIN_PASSWORD || '').length >= 12, db_url_found: !!findUrl(), db: 'skipped' };
+      if (out.db_url_found) { try { await query('select 1'); out.db = 'ok'; } catch (e) { out.db = 'error:' + (e.code || e.name || 'unknown'); } }
+      return send(res, 200, out);
+    }
 
     const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
     if (ADMIN_PASSWORD.length < 12) { console.error('ADMIN_PASSWORD ต้องยาวอย่างน้อย 12 ตัวอักษร'); return send(res, 500, { error: 'server' }); }
