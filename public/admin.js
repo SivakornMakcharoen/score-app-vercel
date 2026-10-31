@@ -75,4 +75,6 @@ $("#csv").onclick = () => {
   a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], {type:"text/csv;charset=utf-8"}));
   a.download = "scores.csv"; a.click(); URL.revokeObjectURL(a.href);
 };
-load().catch(() => {}); // refresh แล้วอยู่ในหน้า Admin ต่อถ้าเซสชันยังอยู่ กดออกจากระบบแล้วต้องใส่รหัสใหม่
+// refresh แล้วอยู่ในหน้า Admin ต่อถ้าเซสชันยังอยู่ กดออกจากระบบแล้วต้องใส่รหัสใหม่
+// ฟอร์มรหัสผ่านซ่อนไว้ก่อน แสดงเมื่อเช็กเซสชันเสร็จแล้วพบว่าต้องล็อกอินเท่านั้น (ไม่ให้แวบ)
+load().catch(() => {}).finally(() => { if ($("#dash").hidden) $("#login").hidden = false; });
