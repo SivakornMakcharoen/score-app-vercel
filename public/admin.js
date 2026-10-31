@@ -75,4 +75,4 @@ $("#csv").onclick = () => {
   a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], {type:"text/csv;charset=utf-8"}));
   a.download = "scores.csv"; a.click(); URL.revokeObjectURL(a.href);
 };
-load().catch(() => {}); // ถ้ายังมีเซสชันอยู่ (refresh) จะอยู่ในหน้า Admin ต่อ กดออกจากระบบแล้วต้องใส่รหัสใหม่
+load().catch(() => {}); // refresh แล้วอยู่ในหน้า Admin ต่อถ้าเซสชันยังอยู่ กดออกจากระบบแล้วต้องใส่รหัสใหม่
