@@ -6,7 +6,7 @@ const { query, findUrl } = require('../lib/db');
 const MAX = 200;                 // เพดานจำนวนต่อกิจกรรม
 const API_LIMIT = 60;            // คำขอต่อนาทีต่อ IP (ผู้ใช้หลายคนในที่เดียวกันมักใช้ IP เดียวกัน จึงไม่ตั้งต่ำเกินไป)
 const LOGIN_LIMIT = 5;           // ล็อกอินผิดได้กี่ครั้งต่อ 15 นาที
-const SESSION_MS = 8 * 3600e3;
+const SESSION_MS = 2 * 3600e3; // เซสชัน admin ฝั่งเซิร์ฟเวอร์ 2 ชั่วโมง
 
 const sha = s => crypto.createHash('sha256').update(String(s)).digest();
 const cleanNick = s => typeof s === 'string' ? s.trim().normalize('NFC') : '';
@@ -104,7 +104,7 @@ module.exports = async function handler(req, res) {
       const t = crypto.randomBytes(32).toString('hex');
       await query('insert into admin_sessions(token_hash, exp) values($1,$2)', [sha(t).toString('hex'), Date.now() + SESSION_MS]);
       const secure = req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : '';
-      return send(res, 200, { ok: true }, { 'Set-Cookie': `sid=${t}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${SESSION_MS / 1000}${secure}` });
+      return send(res, 200, { ok: true }, { 'Set-Cookie': `sid=${t}; HttpOnly; SameSite=Strict; Path=/api/admin${secure}` });
     }
 
     if (!url.startsWith('/api/admin/')) return send(res, 404, { error: 'not_found' });
@@ -113,7 +113,7 @@ module.exports = async function handler(req, res) {
     if (m === 'POST' && url === '/api/admin/logout') {
       const t = cookieOf(req, 'sid');
       if (t) await query('delete from admin_sessions where token_hash = $1', [sha(t).toString('hex')]);
-      return send(res, 200, { ok: true }, { 'Set-Cookie': 'sid=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0' });
+      return send(res, 200, { ok: true }, { 'Set-Cookie': 'sid=; HttpOnly; SameSite=Strict; Path=/api/admin; Max-Age=0' });
     }
     if (m === 'GET' && url === '/api/admin/list') {
       const r = await query('select * from submissions order by total desc, created_at asc');

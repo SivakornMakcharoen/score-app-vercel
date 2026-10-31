@@ -4,9 +4,9 @@ const $ = s => document.querySelector(s), app = $("#app"), modal = $("#modal");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const score = c => c.reduce((a, n, i) => a + n * ACTS[i][1], 0);
 const fresh = () => ({step:1, nick:"", abo:"", c:[0,0,0,0,0], done:null});
-let S; try { S = JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch (e) { S = fresh(); }
+let S = fresh(); try { localStorage.removeItem(KEY); } catch (e) {} // ไม่จำสถานะข้าม refresh: เปิดหน้าใหม่เริ่มขั้นแรกเสมอ
 if (!Array.isArray(S.c) || S.c.length !== 5) S.c = [0,0,0,0,0];
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+const save = () => {}; // ไม่เก็บข้อมูลไว้ในเบราว์เซอร์
 const go = n => { S.step = n; save(); render(); };
 const err = t => { const e = $("#err"); if (e) e.textContent = t; };
 const busy = x => document.querySelectorAll(".btn").forEach(b => b.disabled = x);
