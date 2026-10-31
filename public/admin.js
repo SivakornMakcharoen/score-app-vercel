@@ -75,4 +75,4 @@ $("#csv").onclick = () => {
   a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], {type:"text/csv;charset=utf-8"}));
   a.download = "scores.csv"; a.click(); URL.revokeObjectURL(a.href);
 };
-// ไม่เข้าหน้า Admin อัตโนมัติ: เปิดหน้านี้ทุกครั้งต้องใส่รหัสผ่านใหม่
+load().catch(() => {}); // ถ้ายังมีเซสชันอยู่ (refresh) จะอยู่ในหน้า Admin ต่อ กดออกจากระบบแล้วต้องใส่รหัสใหม่
