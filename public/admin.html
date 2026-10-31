@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin - คะแนนกิจกรรม</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c2321;--paper:#f7f6f1;--teal:#0f4c4a;--red:#b3261e;--line:#d9d6c9;--warn:#fff1c9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Prompt,system-ui,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 48px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+#login{max-width:380px;margin:40px auto}
+label{display:block;margin-bottom:12px;font-weight:600}
+input{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid var(--line);border-radius:8px;font:inherit}
+button{padding:10px 16px;border:0;border-radius:8px;background:var(--teal);color:#fff;font:600 .95rem Prompt,sans-serif;cursor:pointer}
+button.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}button.del{background:var(--red);padding:6px 10px}
+:focus-visible{outline:3px solid #2b8a86;outline-offset:2px}
+.err{color:var(--red);min-height:1.4em}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}.bar span{flex:1}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem;white-space:nowrap}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}td.n,th.n{text-align:right}
+tr.flag{background:var(--warn)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin:12px 0}.row label{margin:0;flex:1;min-width:140px}
+td input{margin:0;padding:6px 8px;min-width:110px}
+button.sm{padding:6px 10px}.ok{color:var(--teal)}.tag{font-size:.8rem;color:#5b625f}
+</style>
+</head>
+<body>
+<main>
+  <section id="login" class="card">
+    <h2>เข้าสู่ระบบ Admin</h2>
+    <label>รหัสผ่าน Admin<input id="pw" type="password" autocomplete="current-password"></label>
+    <p class="err" id="lerr"></p><button id="in">เข้าสู่ระบบ</button>
+  </section>
+  <section id="dash" hidden>
+    <div class="bar"><h2 style="margin:0">อันดับคะแนน</h2><span id="sum"></span>
+      <button class="sec" id="rf">รีเฟรช</button><button class="sec" id="csv">Export CSV</button><button class="sec" id="out">ออกจากระบบ</button></div>
+    <p class="err" id="derr"></p>
+    <div class="card wrap"><table><thead><tr><th class="n">#</th><th>ชื่อเล่น</th><th>ABO</th>
+      <th class="n">เพิ่มรายชื่อ</th><th class="n">เข้าเรื่อง</th><th class="n">BM+OPP</th><th class="n">Begin</th><th class="n">Center</th>
+      <th class="n">รวม</th><th>เวลาส่ง</th><th>แจ้งเตือน</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+  </section>
+</main>
+<script src="/admin.js"></script>
+</body>
+</html>
